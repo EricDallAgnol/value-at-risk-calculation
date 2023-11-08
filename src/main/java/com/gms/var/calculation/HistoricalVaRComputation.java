@@ -112,7 +112,7 @@ public class HistoricalVaRComputation {
         switch (vaRInterpolation) {
             case LOWER:
                 index = (int) Math.floor(quantileIndex);
-                return pnLVector[index];
+                return pnLVector[Math.max(index, 0)];
             case HIGHER:
                 index = (int) Math.ceil(quantileIndex);
                 return pnLVector[index];
@@ -122,7 +122,7 @@ public class HistoricalVaRComputation {
             default:
             case LINEAR:
                 int higherIndex = (int) Math.ceil(quantileIndex);
-                int lowerIndex = (int) Math.floor(quantileIndex);
+                int lowerIndex = Math.max((int) Math.floor(quantileIndex), 0);
 
                 double valueAtHigherIndex = pnLVector[higherIndex];
                 double valueAtLowerIndex = pnLVector[lowerIndex];
