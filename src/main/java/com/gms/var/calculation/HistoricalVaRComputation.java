@@ -109,19 +109,20 @@ public class HistoricalVaRComputation {
      */
     private static double computeInterpolation(double[] pnLVector, double quantileIndex, VaRInterpolation vaRInterpolation) {
         int index;
+        int lastIndex = pnLVector.length -1;
         switch (vaRInterpolation) {
             case LOWER:
                 index = (int) Math.floor(quantileIndex);
                 return pnLVector[Math.max(index, 0)];
             case HIGHER:
                 index = (int) Math.ceil(quantileIndex);
-                return pnLVector[index];
+                return pnLVector[Math.min(lastIndex, index)];
             case NEAREST:
                 index = (int) Math.round(quantileIndex);
-                return pnLVector[index];
+                return pnLVector[Math.min(lastIndex, index)];
             default:
             case LINEAR:
-                int higherIndex = (int) Math.ceil(quantileIndex);
+                int higherIndex = Math.min(lastIndex, (int) Math.ceil(quantileIndex));
                 int lowerIndex = Math.max((int) Math.floor(quantileIndex), 0);
 
                 double valueAtHigherIndex = pnLVector[higherIndex];
