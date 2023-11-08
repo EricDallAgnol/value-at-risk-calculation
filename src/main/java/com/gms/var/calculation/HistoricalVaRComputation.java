@@ -2,6 +2,7 @@ package com.gms.var.calculation;
 
 import com.gms.var.data.entity.PnLTrade;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -51,6 +52,7 @@ public class HistoricalVaRComputation {
      * @return the Value-At-Risk for one P&L Trade
      */
     private static double computeTradeVaR(double[] pnLVector, double quantile, VarMode mode, VaRInterpolation vaRInterpolation) {
+        Arrays.sort(pnLVector);
         double quantileIndex = getQuantileIndex(pnLVector, quantile, mode);
 
         if ((quantileIndex % 1) != 0) {
@@ -90,7 +92,7 @@ public class HistoricalVaRComputation {
             case INC:
                 quantileIndex = (vectorLength -1) * quantile + 1;
         }
-        return quantileIndex;
+        return quantileIndex - 1;
     }
 
     /**
@@ -125,12 +127,13 @@ public class HistoricalVaRComputation {
                 double valueAtHigherIndex = pnLVector[higherIndex];
                 double valueAtLowerIndex = pnLVector[lowerIndex];
 
-                return pnLVector[lowerIndex] + (valueAtHigherIndex - valueAtLowerIndex) * (higherIndex - lowerIndex);
+                return pnLVector[lowerIndex] + (valueAtHigherIndex - valueAtLowerIndex) * (quantileIndex - lowerIndex);
         }
     }
 
     /**
      * Aggregate Vectors
+     * If vectors have a different size, exceeding entries will be dropped
      * @param pnLTrade - List of PnLTrades
      * @return aggregated vectors as double[]
      */
@@ -138,7 +141,7 @@ public class HistoricalVaRComputation {
         List<double[]> pnlVectorList = pnLTrade.stream().map(PnLTrade::getPnl).collect(Collectors.toList());
         double[] aggregatedVector;
 
-        aggregatedVector = pnlVectorList.stream().reduce(HistoricalVaRComputation::aggregate2Vectors).orElse(null);
+        aggregatedVector = pnlVectorList.stream().reduce(HistoricalVaRComputation::aggregate2Vectors).orElse(new double[]{});
         return aggregatedVector;
 
 
@@ -146,8 +149,9 @@ public class HistoricalVaRComputation {
 
     /**
      * Helper method to aggregate 2 vectors
-     * @param vector1
-     * @param vector2
+     * Truncate extra values if the vectors have not the same size
+     * @param vector1 - Vector 1
+     * @param vector2 - Vector 2
      * @return aggregation of the 2 provided vectors
      */
     private static double[] aggregate2Vectors(double[] vector1, double[] vector2) {

@@ -23,8 +23,8 @@ import java.util.List;
 public class DataManagementService {
 
     protected static final String CSV_TYPE = "text/csv";
-    protected static char CSV_SEPARATOR = ',';
-    protected static String VECTOR_SEPARATOR = ";";
+    protected static final char CSV_SEPARATOR = ',';
+    protected static final String VECTOR_SEPARATOR = ";";
 
     protected static final int ASOFDATE_INDEX = 0;
     protected static final int TRADEID_INDEX = 1;
@@ -116,16 +116,13 @@ public class DataManagementService {
                 String tradeID = line[TRADEID_INDEX];
                 double[] pnl = Arrays.stream(line[VECTOR_INDEX].split(VECTOR_SEPARATOR)).mapToDouble(Double::valueOf).toArray();
 
-                // Sort P&L before persisting it
-                Arrays.sort(pnl);
-
                 pnLTradeList.add(new PnLTrade(asOfDate, tradeID, pnl));
             }
 
         return pnLTradeList;
 
         } catch (IOException e) {
-            throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
+            throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
         } catch (CsvValidationException e) {
             throw new RuntimeException(e);
         }

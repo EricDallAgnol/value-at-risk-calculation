@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>com.gms</groupId>
 	<artifactId>var</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.9.0-SNAPSHOT</version>
 	<name>var</name>
-	<description>Java VaR implementation</description>
+	<description>Java Historical VaR implementation</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

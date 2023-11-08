@@ -16,7 +16,7 @@ public class CalculationController {
     public ResponseEntity<String> computeValueAtRisk(@RequestBody ComputeVaRForm computeVaRForm) {
         try {
             if (computeVaRForm.getPnLTrades() == null) {
-                throw new RuntimeException("No trades loaded !");
+                throw new RuntimeException("No trades selected !");
             }
             double var = HistoricalVaRComputation.computeTradeVaR(List.of(computeVaRForm.getPnLTrades()), computeVaRForm.getQuantile(), computeVaRForm.getMode(), computeVaRForm.getInterpolation());
             return ResponseEntity.ok(String.valueOf(var));
