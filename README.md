@@ -47,7 +47,7 @@ You can now reach the UI Application on : http://localhost:8081/var-view/index.h
 --------
 ## CSV File
 
-The CSV file expected by the Application should contain the following informations : AsOfDate, TradeId, PnL Vector
+The CSV file expected by the Application should contain the following information : AsOfDate, TradeId, PnL Vector
 > ⚠️Note: the header fields name don't matter but the order does !
 
 Here is an example :

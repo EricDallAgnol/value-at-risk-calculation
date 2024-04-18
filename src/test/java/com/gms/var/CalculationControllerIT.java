@@ -1,7 +1,7 @@
 package com.gms.var;
 
-import com.gms.var.data.repository.PnLTradesRepository;
-import com.gms.var.data.service.DataManagementService;
+import com.gms.var.repository.PnLTradesRepository;
+import com.gms.var.service.DataManagementService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class CalculationControllerIT {
 
+    // TODO: Improve using external json resource
     @Autowired
     private MockMvc mockMvc;
 

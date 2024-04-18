@@ -1,12 +1,14 @@
-package com.gms.var.data.service;
+package com.gms.var.service;
 
-import com.gms.var.data.entity.PnLTrade;
-import com.gms.var.data.repository.PnLTradesRepository;
+import com.gms.var.cfg.VarApplicationConfig;
+import com.gms.var.entities.PnLVector;
+import com.gms.var.entities.TradePositionWithPnL;
+import com.gms.var.repository.PnLTradesRepository;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvValidationException;
+import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,14 +26,11 @@ public class DataManagementService {
 
     protected static final String CSV_TYPE = "text/csv";
     protected static final char CSV_SEPARATOR = ',';
-    protected static final String VECTOR_SEPARATOR = ";";
-
-    protected static final int ASOFDATE_INDEX = 0;
-    protected static final int TRADEID_INDEX = 1;
-    protected static final int VECTOR_INDEX = 2;
-
     @Autowired
     PnLTradesRepository pnLTradesRepository;
+
+    @Autowired
+    VarApplicationConfig varApplicationConfig;
 
     public void isCSVFileValid(MultipartFile csvFile) {
         if (!csvFile.isEmpty()) {
@@ -48,8 +47,8 @@ public class DataManagementService {
      */
     public void save(MultipartFile csvFile) {
         try {
-            List<PnLTrade> pnLTradeList = convertCSVIntoPnLTrades(csvFile);
-            pnLTradesRepository.saveAll(pnLTradeList);
+            List<TradePositionWithPnL> tradePositionWithPnLList = convertCSVIntoPnLTrades(csvFile);
+            pnLTradesRepository.saveAll(tradePositionWithPnLList);
         } catch (Exception e) {
             throw new RuntimeException("Failed to store csv data: " + e.getMessage());
         }
@@ -59,7 +58,7 @@ public class DataManagementService {
      *
      * @return all the trades stored in the H2 DataBase
      */
-    public List<PnLTrade> getAllTrades() {
+    public List<TradePositionWithPnL> getAllTrades() {
         try {
             return pnLTradesRepository.findAll();
         } catch (Exception e) {
@@ -94,9 +93,9 @@ public class DataManagementService {
      * @param csvFile - CSV file containing the P&L Trades
      * @return - list of PnLTrade
      */
-    private static List<PnLTrade> convertCSVIntoPnLTrades(MultipartFile csvFile) {
+    private List<TradePositionWithPnL> convertCSVIntoPnLTrades(MultipartFile csvFile) {
 
-        List<PnLTrade> pnLTradeList = new ArrayList<>();
+        List<TradePositionWithPnL> tradePositionWithPnLList = new ArrayList<>();
 
         try {
             Reader reader = new InputStreamReader(csvFile.getInputStream());
@@ -110,20 +109,23 @@ public class DataManagementService {
                     .withSkipLines(1)
                     .build();
 
-            String[] line;
-            while ((line = csvReader.readNext()) != null) {
-                LocalDate asOfDate = LocalDate.parse(line[ASOFDATE_INDEX]);
-                String tradeID = line[TRADEID_INDEX];
-                double[] pnl = Arrays.stream(line[VECTOR_INDEX].split(VECTOR_SEPARATOR)).mapToDouble(Double::valueOf).toArray();
+            List<String[]> csvLines = csvReader.readAll();
 
-                pnLTradeList.add(new PnLTrade(asOfDate, tradeID, pnl));
-            }
+            csvLines.parallelStream().forEach(line -> {
+                LocalDate asOfDate = LocalDate.parse(line[varApplicationConfig.asOfDateIndex]);
+                String tradeID = line[varApplicationConfig.tradeIdIndex];
+                PnLVector pnl = new PnLVector(Arrays.stream(line[varApplicationConfig.pnLVectorIndex].split(varApplicationConfig.pnLVectorSeparator)).mapToDouble(Double::valueOf).toArray());
 
-        return pnLTradeList;
+                synchronized (tradePositionWithPnLList) {
+                    tradePositionWithPnLList.add(new TradePositionWithPnL(asOfDate, tradeID, pnl));
+                }
+            });
+
+        return tradePositionWithPnLList;
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
-        } catch (CsvValidationException e) {
+        } catch (CsvException e) {
             throw new RuntimeException(e);
         }
     }

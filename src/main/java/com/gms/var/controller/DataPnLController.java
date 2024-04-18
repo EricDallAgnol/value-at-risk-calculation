@@ -1,6 +1,6 @@
-package com.gms.var.data.controller;
+package com.gms.var.controller;
 
-import com.gms.var.data.service.DataManagementService;
+import com.gms.var.service.DataManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
