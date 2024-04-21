@@ -72,7 +72,7 @@ const VaRForm = ({selectedTrades}:{selectedTrades: DataType[] | undefined}) => {
                 "quantile": values.quantile,
                 "mode": values.mode,
                 "interpolation": values.interpolation,
-                "tradePositionWithPnLRecords": selectedTradesPnL
+                "tradePositionWithPnL": selectedTradesPnL
             })
           })
             .then(response => response.text())
