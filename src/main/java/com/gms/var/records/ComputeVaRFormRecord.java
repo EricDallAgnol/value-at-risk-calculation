@@ -7,6 +7,6 @@ import com.gms.var.enums.VarModeEnum;
 import java.io.Serializable;
 
 
-public record ComputeVaRFormRecord(double quantile, VarModeEnum mode, VaRInterpolationEnum interpolation, TradePositionWithPnL[] tradePositionWithPnLRecords) implements Serializable {
+public record ComputeVaRFormRecord(double quantile, VarModeEnum mode, VaRInterpolationEnum interpolation, TradePositionWithPnL[] tradePositionWithPnL) implements Serializable {
 
 }

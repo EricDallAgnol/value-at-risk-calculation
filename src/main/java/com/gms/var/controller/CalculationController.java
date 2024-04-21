@@ -15,10 +15,10 @@ public class CalculationController {
     @PostMapping("/var")
     public ResponseEntity<String> computeValueAtRisk(@RequestBody ComputeVaRFormRecord computeVaRFormRecord) {
         try {
-            if (computeVaRFormRecord.tradePositionWithPnLRecords() == null) {
+            if (computeVaRFormRecord.tradePositionWithPnL() == null) {
                 throw new RuntimeException("No trades selected !");
             }
-            ComputeHistoricalVaR computeHistoricalVaR = new ComputeHistoricalVaR(List.of(computeVaRFormRecord.tradePositionWithPnLRecords()), computeVaRFormRecord.quantile(), computeVaRFormRecord.mode(), computeVaRFormRecord.interpolation());
+            ComputeHistoricalVaR computeHistoricalVaR = new ComputeHistoricalVaR(List.of(computeVaRFormRecord.tradePositionWithPnL()), computeVaRFormRecord.quantile(), computeVaRFormRecord.mode(), computeVaRFormRecord.interpolation());
             double var = computeHistoricalVaR.computeTradeVaR();
             return ResponseEntity.ok(String.valueOf(var));
         } catch (Exception e) {
