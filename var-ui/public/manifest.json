@@ -1,8 +1,0 @@
-{
-  "short_name": "VaR App",
-  "name": "VaR Calculation App",
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
-}
