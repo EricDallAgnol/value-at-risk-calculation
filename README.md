@@ -14,9 +14,14 @@ mvn clean install
 java  -jar var-0.9.0-SNAPSHOT.jar
 ```
 
-You can now reach the UI Application on : http://localhost:8081/var-view/index.html
+You can now reach the UI Application on : http://localhost:8081/index.html
 
-![image](https://github.com/EricDallAgnol/value-at-risk-calculation/assets/83015366/7cab3ef5-379a-4ebb-8179-d1c8ffcc7dc6)
+![image](https://github.com/EricDallAgnol/value-at-risk-calculation/assets/83015366/156d08e4-72a8-4c2f-b9f7-367c52256126)
+
+![image](https://github.com/EricDallAgnol/value-at-risk-calculation/assets/83015366/24bb4a51-748f-4b34-9f52-0b5f6b312add)
+
+![image](https://github.com/EricDallAgnol/value-at-risk-calculation/assets/83015366/5bb3a65f-3137-4447-b478-780abca1d9b5)
+
 
 --------
 ### How to compute the VaR ❓
