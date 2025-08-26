@@ -1,5 +1,10 @@
 # Value-At-Risk Calculation (Historical Method)
 
+![Java](https://img.shields.io/badge/java-orange?style=for-the-badge&logo=java&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-6DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-3178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/react-3178C6.svg?style=for-the-badge&logo=react&logoColor=white)
+
 This mini-project aims to calculate the Value-At-Risk with the Historical method, starting from a P&L input CSV file.
 
 ## 🛠️ Installation :
